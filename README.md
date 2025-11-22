@@ -29,4 +29,3 @@
 
 ## Default Credentials
 - **Admin**: username: `admin`, password: `admin123`
-# Hospital_Management_Service
