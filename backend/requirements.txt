@@ -1,0 +1,9 @@
+Flask
+Flask-SQLAlchemy
+Flask-Migrate
+Flask-Cors
+Flask-JWT-Extended
+redis
+celery
+python-dotenv
+email-validator
