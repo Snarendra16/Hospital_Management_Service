@@ -8,7 +8,8 @@ bp = Blueprint('admin', __name__, url_prefix='/admin')
 @bp.route('/stats', methods=['GET'])
 @jwt_required()
 def get_stats():
-    current_user = get_jwt_identity()
+    import json
+    current_user = json.loads(get_jwt_identity())
     if current_user['role'] != 'admin':
         return jsonify({"msg": "Unauthorized"}), 403
         
@@ -25,7 +26,8 @@ def get_stats():
 @bp.route('/doctors', methods=['GET', 'POST'])
 @jwt_required()
 def manage_doctors():
-    current_user = get_jwt_identity()
+    import json
+    current_user = json.loads(get_jwt_identity())
     if current_user['role'] != 'admin':
         return jsonify({"msg": "Unauthorized"}), 403
 
@@ -62,7 +64,8 @@ def manage_doctors():
 @bp.route('/users/<int:id>/block', methods=['PUT'])
 @jwt_required()
 def block_user(id):
-    current_user = get_jwt_identity()
+    import json
+    current_user = json.loads(get_jwt_identity())
     if current_user['role'] != 'admin':
         return jsonify({"msg": "Unauthorized"}), 403
         

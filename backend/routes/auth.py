@@ -17,7 +17,9 @@ def login():
         if not user.is_active:
             return jsonify({"msg": "Account is blocked"}), 403
             
-        access_token = create_access_token(identity={'id': user.id, 'role': user.role, 'username': user.username})
+        import json
+        identity_str = json.dumps({'id': user.id, 'role': user.role, 'username': user.username})
+        access_token = create_access_token(identity=identity_str)
         return jsonify(access_token=access_token, role=user.role), 200
     
     return jsonify({"msg": "Bad username or password"}), 401

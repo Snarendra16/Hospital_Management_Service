@@ -9,21 +9,21 @@ const showAddDoctor = ref(false)
 const newDoctor = ref({ username: '', email: '', password: '', specialization: '', description: '' })
 
 const fetchStats = async () => {
-  const res = await fetch('https://hospital-management-service-1.onrender.com/admin/stats', {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/stats`, {
     headers: { 'Authorization': `Bearer ${authStore.token}` }
   })
   if (res.ok) stats.value = await res.json()
 }
 
 const fetchDoctors = async () => {
-  const res = await fetch('https://hospital-management-service-1.onrender.com/admin/doctors', {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/doctors`, {
     headers: { 'Authorization': `Bearer ${authStore.token}` }
   })
   if (res.ok) doctors.value = await res.json()
 }
 
 const addDoctor = async () => {
-  const res = await fetch('https://hospital-management-service-1.onrender.com/admin/doctors', {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/doctors`, {
     method: 'POST',
     headers: { 
         'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ const addDoctor = async () => {
 const blockUser = async (doctor) => {
     if (!confirm(`Are you sure you want to ${doctor.is_active ? 'block' : 'unblock'} this doctor?`)) return
 
-    const res = await fetch(`https://hospital-management-service-1.onrender.com/admin/users/${doctor.user_id}/block`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/users/${doctor.user_id}/block`, {
         method: 'PUT',
         headers: { 'Authorization': `Bearer ${authStore.token}` }
     })
@@ -60,7 +60,7 @@ const blockUser = async (doctor) => {
 }
 
 const triggerTask = async (taskName) => {
-    const res = await fetch(`https://hospital-management-service-1.onrender.com/admin/tasks/${taskName}`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/tasks/${taskName}`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${authStore.token}` }
     })

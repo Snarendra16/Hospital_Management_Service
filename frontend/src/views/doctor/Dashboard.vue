@@ -8,7 +8,7 @@ const selectedAppointment = ref(null)
 const treatment = ref({ diagnosis: '', prescription: '', notes: '' })
 
 const fetchAppointments = async () => {
-  const res = await fetch('https://hospital-management-service-1.onrender.com/doctor/appointments', {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/doctor/appointments`, {
     headers: { 'Authorization': `Bearer ${authStore.token}` }
   })
   if (res.ok) appointments.value = await res.json()
@@ -22,7 +22,7 @@ const openCompleteModal = (appt) => {
 const completeAppointment = async () => {
     if (!selectedAppointment.value) return
 
-    const res = await fetch(`https://hospital-management-service-1.onrender.com/doctor/appointments/${selectedAppointment.value.id}/complete`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/doctor/appointments/${selectedAppointment.value.id}/complete`, {
         method: 'POST',
         headers: { 
             'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ const availability = ref({
 })
 
 const fetchAvailability = async () => {
-    const res = await fetch('https://hospital-management-service-1.onrender.com/doctor/availability', {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/doctor/availability`, {
         headers: { 'Authorization': `Bearer ${authStore.token}` }
     })
     if (res.ok) {
@@ -66,7 +66,7 @@ const fetchAvailability = async () => {
 }
 
 const saveAvailability = async () => {
-    const res = await fetch('https://hospital-management-service-1.onrender.com/doctor/availability', {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/doctor/availability`, {
         method: 'PUT',
         headers: { 
             'Content-Type': 'application/json',
@@ -78,14 +78,14 @@ const saveAvailability = async () => {
 }
 
 const fetchPatients = async () => {
-    const res = await fetch('https://hospital-management-service-1.onrender.com/doctor/patients', {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/doctor/patients`, {
         headers: { 'Authorization': `Bearer ${authStore.token}` }
     })
     if (res.ok) patients.value = await res.json()
 }
 
 const viewHistory = async (patientId) => {
-    const res = await fetch(`https://hospital-management-service-1.onrender.com/doctor/patients/${patientId}/history`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/doctor/patients/${patientId}/history`, {
         headers: { 'Authorization': `Bearer ${authStore.token}` }
     })
     if (res.ok) {

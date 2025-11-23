@@ -19,7 +19,8 @@ def search_doctors():
 @bp.route('/appointments', methods=['GET', 'POST'])
 @jwt_required()
 def manage_appointments():
-    current_user = get_jwt_identity()
+    import json
+    current_user = json.loads(get_jwt_identity())
     if current_user['role'] != 'patient':
         return jsonify({"msg": "Unauthorized"}), 403
         
@@ -58,7 +59,8 @@ def manage_appointments():
 @bp.route('/profile', methods=['GET', 'PUT'])
 @jwt_required()
 def manage_profile():
-    current_user = get_jwt_identity()
+    import json
+    current_user = json.loads(get_jwt_identity())
     if current_user['role'] != 'patient':
         return jsonify({"msg": "Unauthorized"}), 403
         

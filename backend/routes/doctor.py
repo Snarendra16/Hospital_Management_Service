@@ -7,7 +7,8 @@ bp = Blueprint('doctor', __name__, url_prefix='/doctor')
 @bp.route('/appointments', methods=['GET'])
 @jwt_required()
 def get_appointments():
-    current_user = get_jwt_identity()
+    import json
+    current_user = json.loads(get_jwt_identity())
     if current_user['role'] != 'doctor':
         return jsonify({"msg": "Unauthorized"}), 403
         
@@ -21,7 +22,8 @@ def get_appointments():
 @bp.route('/appointments/<int:id>/complete', methods=['POST'])
 @jwt_required()
 def complete_appointment(id):
-    current_user = get_jwt_identity()
+    import json
+    current_user = json.loads(get_jwt_identity())
     if current_user['role'] != 'doctor':
         return jsonify({"msg": "Unauthorized"}), 403
         
@@ -49,7 +51,8 @@ def complete_appointment(id):
 @bp.route('/patients', methods=['GET'])
 @jwt_required()
 def get_patients():
-    current_user = get_jwt_identity()
+    import json
+    current_user = json.loads(get_jwt_identity())
     if current_user['role'] != 'doctor':
         return jsonify({"msg": "Unauthorized"}), 403
         
@@ -74,7 +77,8 @@ def get_patients():
 @bp.route('/patients/<int:id>/history', methods=['GET'])
 @jwt_required()
 def get_patient_history(id):
-    current_user = get_jwt_identity()
+    import json
+    current_user = json.loads(get_jwt_identity())
     if current_user['role'] != 'doctor':
         return jsonify({"msg": "Unauthorized"}), 403
         
@@ -96,7 +100,8 @@ def get_patient_history(id):
 @bp.route('/availability', methods=['GET', 'PUT'])
 @jwt_required()
 def manage_availability():
-    current_user = get_jwt_identity()
+    import json
+    current_user = json.loads(get_jwt_identity())
     if current_user['role'] != 'doctor':
         return jsonify({"msg": "Unauthorized"}), 403
         
