@@ -52,6 +52,10 @@ const handleLogin = async () => {
             </div>
           </div>
         </div>
+        <div class="text-center mt-5">
+          <p class="text-muted mb-0">&copy; Hospital Registry</p>
+          <p class="text-muted small">Made with <span class="text-danger">&hearts;</span> by Narendra</p>
+        </div>
       </div>
     </div>
   </div>

@@ -11,7 +11,7 @@ const router = useRouter()
 
 const handleRegister = async () => {
   try {
-    const response = await fetch('http://localhost:5000/auth/register-doctor', {
+    const response = await fetch('https://hospital-management-service-1.onrender.com/auth/register-doctor', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
