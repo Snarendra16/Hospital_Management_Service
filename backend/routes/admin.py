@@ -24,8 +24,9 @@ def get_stats():
     }), 200
 
 @bp.route('/doctors', methods=['GET', 'POST'])
+@bp.route('/doctors/<int:id>', methods=['DELETE'])
 @jwt_required()
-def manage_doctors():
+def manage_doctors(id=None):
     import json
     current_user = json.loads(get_jwt_identity())
     if current_user['role'] != 'admin':
@@ -65,6 +66,8 @@ def manage_doctors():
 @jwt_required()
 def block_user(id):
     import json
+    from datetime import date
+    
     current_user = json.loads(get_jwt_identity())
     if current_user['role'] != 'admin':
         return jsonify({"msg": "Unauthorized"}), 403
@@ -74,6 +77,28 @@ def block_user(id):
         return jsonify({"msg": "Cannot block admin"}), 400
         
     user.is_active = not user.is_active
+    
+    # If blocking a doctor, cancel future appointments
+    if not user.is_active and user.role == 'doctor':
+        if user.doctor_profile:
+            doctor_id = user.doctor_profile.id
+            print(f"Blocking Doctor ID: {doctor_id}")
+            
+            # Cancel future appointments
+            appointments = Appointment.query.filter(
+                Appointment.doctor_id == doctor_id,
+                Appointment.date >= date.today(),
+                Appointment.status == 'Booked'
+            ).all()
+            
+            print(f"Found {len(appointments)} future appointments to cancel.")
+            
+            for appt in appointments:
+                appt.status = 'Cancelled'
+                print(f"Cancelled Appointment ID: {appt.id}")
+        else:
+            print("User is doctor but has no profile.")
+    
     db.session.commit()
     
     status = "unblocked" if user.is_active else "blocked"
@@ -83,8 +108,6 @@ def block_user(id):
 @jwt_required()
 def trigger_reminders():
     from tasks import send_daily_reminders
-    # Call synchronously for demo if Redis not running, or .delay() if it is
-    # For this environment, let's try synchronous to ensure user sees output
     try:
         result = send_daily_reminders()
         return jsonify({"msg": str(result)}), 200

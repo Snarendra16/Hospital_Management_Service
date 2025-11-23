@@ -12,7 +12,7 @@ const profile = ref({ contact_number: '', address: '', date_of_birth: '' })
 const showProfile = ref(false)
 
 const fetchProfile = async () => {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/patient/profile`, {
+    const res = await fetch(`http://127.0.0.1:5000/patient/profile`, {
         headers: { 'Authorization': `Bearer ${authStore.token}` }
     })
     if (res.ok) {
@@ -26,7 +26,7 @@ const fetchProfile = async () => {
 }
 
 const updateProfile = async () => {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/patient/profile`, {
+    const res = await fetch(`http://127.0.0.1:5000/patient/profile`, {
         method: 'PUT',
         headers: { 
             'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ const updateProfile = async () => {
 }
 
 const searchDoctors = async () => {
-  let url = `${import.meta.env.VITE_API_URL}/patient/doctors`
+  let url = `http://127.0.0.1:5000/patient/doctors`
   if (searchQuery.value) {
       url += `?specialization=${searchQuery.value}`
   }
@@ -53,7 +53,7 @@ const searchDoctors = async () => {
 }
 
 const fetchAppointments = async () => {
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/patient/appointments`, {
+  const res = await fetch(`http://127.0.0.1:5000/patient/appointments`, {
     headers: { 'Authorization': `Bearer ${authStore.token}` }
   })
   if (res.ok) appointments.value = await res.json()
@@ -67,7 +67,7 @@ const openBookModal = (doc) => {
 const bookAppointment = async () => {
     if (!selectedDoctor.value) return
 
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/patient/appointments`, {
+    const res = await fetch(`http://127.0.0.1:5000/patient/appointments`, {
         method: 'POST',
         headers: { 
             'Content-Type': 'application/json',

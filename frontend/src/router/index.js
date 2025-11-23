@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import RegisterDoctor from '../views/RegisterDoctor.vue'
+
 // Lazy load dashboards
 const AdminDashboard = () => import('../views/admin/Dashboard.vue')
 const DoctorDashboard = () => import('../views/doctor/Dashboard.vue')
@@ -51,19 +52,26 @@ const router = createRouter({
 })
 
 // Navigation Guard
+// Navigation Guard
 router.beforeEach((to, from, next) => {
-  const publicPages = ['/login', '/register', '/register-doctor'];
-  const authRequired = !publicPages.includes(to.path);
   const loggedIn = localStorage.getItem('user');
+  const token = localStorage.getItem('token');
+  const isAuthenticated = loggedIn && token;
 
-  if (authRequired && !loggedIn) {
+  if (to.meta.requiresAuth && !isAuthenticated) {
     return next('/login');
   }
 
-  if (loggedIn) {
+  if (isAuthenticated) {
     const user = JSON.parse(loggedIn);
+
+    // Prevent authenticated users from visiting login/register
+    if (['/login', '/register', '/register-doctor'].includes(to.path)) {
+      return next('/' + user.role);
+    }
+
+    // Role-based access control
     if (to.meta.role && to.meta.role !== user.role) {
-      // Redirect to correct dashboard if role mismatch
       return next('/' + user.role);
     }
   }

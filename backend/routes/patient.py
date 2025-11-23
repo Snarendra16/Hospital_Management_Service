@@ -5,15 +5,20 @@ from datetime import datetime
 
 bp = Blueprint('patient', __name__, url_prefix='/patient')
 
+from models import User
+
 @bp.route('/doctors', methods=['GET'])
 @jwt_required()
 def search_doctors():
     # Allow filtering by specialization
     specialization = request.args.get('specialization')
+    
+    query = db.session.query(Doctor).join(User).filter(User.is_active == True)
+    
     if specialization:
-        doctors = Doctor.query.filter(Doctor.specialization.ilike(f'%{specialization}%')).all()
-    else:
-        doctors = Doctor.query.all()
+        query = query.filter(Doctor.specialization.ilike(f'%{specialization}%'))
+        
+    doctors = query.all()
     return jsonify([d.to_dict() for d in doctors]), 200
 
 @bp.route('/appointments', methods=['GET', 'POST'])

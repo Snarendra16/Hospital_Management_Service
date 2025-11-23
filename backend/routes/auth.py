@@ -1,7 +1,9 @@
 from flask import Blueprint, request, jsonify
 from models import db, User, Patient
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
+import json
+from datetime import timedelta
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -15,14 +17,14 @@ def login():
     
     if user and check_password_hash(user.password_hash, password):
         if not user.is_active:
-            return jsonify({"msg": "Account is blocked"}), 403
+            return jsonify({"msg": "Account is blocked. Contact admin."}), 403
             
-        import json
-        identity_str = json.dumps({'id': user.id, 'role': user.role, 'username': user.username})
-        access_token = create_access_token(identity=identity_str)
+        # Create token with identity as JSON string
+        identity = json.dumps({'id': user.id, 'role': user.role})
+        access_token = create_access_token(identity=identity)
         return jsonify(access_token=access_token, role=user.role), 200
     
-    return jsonify({"msg": "Bad username or password"}), 401
+    return jsonify({"msg": "Invalid credentials"}), 401
 
 @bp.route('/register', methods=['POST'])
 def register():
